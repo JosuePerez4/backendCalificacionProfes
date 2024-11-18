@@ -24,6 +24,12 @@ public class Usuario {
 	private String nombre;
 	@Column(name="correo", length = 100)
 	private String correo;
+	@Column(name="codigo", length = 10)
+	private String codigo;
+	@Column(name="contraseña", length = 20)
+	private String contraseña;
+	@Column(name="carrera", length = 100)
+	private String carrera;
 	@Column(name="rol")
 	private int rol;
 }
