@@ -6,29 +6,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import proyecto.tercera.nota.entities.Usuario;
-import proyecto.tercera.nota.services.UsuarioServices;
+import proyecto.tercera.nota.entities.Estudiante;
+import proyecto.tercera.nota.services.EstudianteServices;
 
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/api/estudiantes")
 @CrossOrigin(origins = "http://127.0.0.1:4455") // Permitir solicitudes CORS
-public class UsuarioControlador {
+public class EstudianteController {
 
 	@Autowired
-	private UsuarioServices usuarioServices;
+	private EstudianteServices estudianteServices;
 
 	@PostMapping("/registro")
-	public ResponseEntity<?> registerUser(@RequestBody Usuario usuario) {
+	public ResponseEntity<?> registrarEstudiante(@RequestBody Estudiante estudiante) {
 		try {
-			Usuario usuarioRegistrado = usuarioServices.registrarUsuario(usuario);
-			return ResponseEntity.ok(usuarioRegistrado);
+			Estudiante estudianteRegistrado = estudianteServices.registrarEstudiante(estudiante);
+			return ResponseEntity.ok(estudianteRegistrado);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
@@ -40,16 +38,15 @@ public class UsuarioControlador {
 		String contraseña = credentials.get("contraseña");
 
 		// Buscar el usuario por código
-		Usuario usuario = usuarioServices.buscarPorCodigo(codigo);
+		Estudiante estudiante = estudianteServices.buscarPorCodigo(codigo);
 
 		// Verificar si el usuario existe y si la contraseña coincide
-		if (usuario != null && usuario.getContraseña().equals(contraseña)) {
+		if (estudiante != null && estudiante.getContraseña().equals(contraseña)) {
 			// Si las credenciales son correctas
-			return ResponseEntity.ok(usuario);
+			return ResponseEntity.ok(estudiante);
 		} else {
 			// Si las credenciales no son correctas
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Credenciales incorrectas"));
 		}
 	}
-
 }
