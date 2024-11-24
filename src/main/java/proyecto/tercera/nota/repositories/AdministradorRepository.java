@@ -10,4 +10,6 @@ public interface AdministradorRepository extends JpaRepository<Administrador, In
 	boolean existsByUsuario(String usuario);
 
 	Administrador findByUsuario(String usuario);
+	
+	Administrador findByTokenRecuperacion(String token);
 }

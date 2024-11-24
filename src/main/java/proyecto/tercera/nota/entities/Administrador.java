@@ -10,15 +10,20 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="administrador")
+@Table(name = "administrador")
 public class Administrador {
-	
+
 	@Id
-	@Column(name="id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@Column(name="usuario", length = 20)
+	@Column(name = "usuario", length = 20)
 	private String usuario;
-	@Column(name="contraseña", length = 20)
+	@Column(name = "contraseña", length = 20)
 	private String contraseña;
+	@Column(name = "correo", length = 100)
+	private String correo;
+	@Column(nullable = true) // Permitir que sea opcional
+	private String tokenRecuperacion;
+
 }

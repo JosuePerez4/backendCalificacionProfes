@@ -10,4 +10,6 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 	boolean existsByCodigo(String codigo);
 
 	Estudiante findByCodigo(String codigo);
+	
+	Estudiante findByTokenRecuperacion(String token);
 }

@@ -26,4 +26,6 @@ public class Estudiante {
 	private String contraseña;
 	@Column(name="carrera", length = 100)
 	private String carrera;
+	@Column(nullable = true) // Permitir que sea opcional
+    private String tokenRecuperacion;
 }
