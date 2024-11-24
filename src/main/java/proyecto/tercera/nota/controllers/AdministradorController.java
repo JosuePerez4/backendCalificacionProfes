@@ -7,10 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import proyecto.tercera.nota.entities.Administrador;
 import proyecto.tercera.nota.services.AdministradorServices;
 
@@ -21,17 +22,20 @@ public class AdministradorController {
 
 	@Autowired
 	private AdministradorServices administradorServices;
-	
+
 	@PostMapping("/registro")
-	public ResponseEntity<?> registrarAdministrativo (@RequestBody Administrador admin) {
+	public ResponseEntity<?> registrarAdministrador(@RequestBody Administrador admin) {
 		try {
+			// Verificar que los datos llegan correctamente
+			System.out.println("Recibiendo datos: " + admin.toString());
+
 			Administrador adminRegistrado = administradorServices.registrarAdministrador(admin);
 			return ResponseEntity.ok(adminRegistrado);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-	
+
 	@PostMapping("/inicio-sesion")
 	public ResponseEntity<?> verificarInicioSesion(@RequestBody Map<String, String> credentials) {
 		String usuario = credentials.get("usuario");
