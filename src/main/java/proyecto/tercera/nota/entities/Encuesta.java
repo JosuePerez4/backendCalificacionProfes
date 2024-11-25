@@ -15,22 +15,24 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="encuesta")
+@Table(name = "encuesta")
 public class Encuesta {
-    @Id
-    @Column(name="id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    @ManyToOne
-    private Curso curso;
+	@ManyToOne
+	private Curso curso;
 
-    @ManyToOne
-    private Profesor profesor;
+	@ManyToOne
+	private Profesor profesor;
 
-    private LocalDate fechaEnvio;
+	private LocalDate fechaEnvio;
 
-    @OneToMany(mappedBy = "encuesta")
-    private List<Pregunta> preguntas;
+	@OneToMany(mappedBy = "encuesta")
+	private List<Pregunta> preguntas;
+
+	@OneToMany(mappedBy = "encuesta")
+	private List<Respuesta> respuestas;
 }
-

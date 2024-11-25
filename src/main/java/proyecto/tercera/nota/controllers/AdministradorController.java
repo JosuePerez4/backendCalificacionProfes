@@ -1,5 +1,6 @@
 package proyecto.tercera.nota.controllers;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -117,5 +119,25 @@ public class AdministradorController {
 	                .body(Map.of("message", "Error al verificar el token del administrador."));
 	    }
 	}
+	
+	@GetMapping("/administradores")
+    public ResponseEntity<List<Administrador>> obtenerTodosLosAdministradores() {
+        try {
+            List<Administrador> administradores = administradorServices.obtenerAdministradores();
+            return ResponseEntity.ok(administradores);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @GetMapping("/{usuario}")
+    public ResponseEntity<Administrador> obtenerAdministradorPorUsuario(@PathVariable String usuario) {
+        try {
+            Administrador administrador = administradorServices.obtenerAdministrador(usuario);
+            return ResponseEntity.ok(administrador);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 
 }

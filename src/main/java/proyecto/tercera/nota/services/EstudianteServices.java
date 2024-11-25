@@ -1,5 +1,6 @@
 package proyecto.tercera.nota.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,35 @@ public class EstudianteServices {
 			return true;
 		}
 		return false;
+	}
+
+	public List<Estudiante> obtenerEstudiantes() {
+		try {
+			List<Estudiante> estudiantes = estudianteRepository.findAll();
+
+			if (estudiantes.isEmpty()) {
+				throw new RuntimeException("No se encontraron estudiantes en la base de datos.");
+			}
+
+			return estudiantes;
+
+		} catch (Exception e) {
+			throw new RuntimeException("Error al obtener los estudiantes: " + e.getMessage(), e);
+		}
+	}
+
+	public Estudiante obtenerEstudiante(String codigo) {
+		if (codigo == null || codigo.trim().isEmpty()) {
+			throw new IllegalArgumentException("El código del estudiante no puede ser nulo o vacío.");
+		}
+
+		Estudiante estudiante = estudianteRepository.findByCodigo(codigo);
+
+		if (estudiante != null) {
+			return estudiante;
+		} else {
+			throw new RuntimeException("Estudiante con código " + codigo + " no encontrado.");
+		}
 	}
 
 }
