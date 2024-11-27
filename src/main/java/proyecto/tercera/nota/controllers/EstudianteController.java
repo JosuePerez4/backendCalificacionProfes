@@ -1,23 +1,17 @@
 package proyecto.tercera.nota.controllers;
 
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import proyecto.tercera.nota.DTO.EstudianteDTO;
-import proyecto.tercera.nota.DTO.ActualizarContraseñaDTO;
 import proyecto.tercera.nota.entities.Estudiante;
-import proyecto.tercera.nota.services.EmailService;
 import proyecto.tercera.nota.services.EstudianteServices;
 
 @RestController
@@ -27,6 +21,28 @@ public class EstudianteController {
 
 	@Autowired
 	private EstudianteServices estudianteService;
+
+	@GetMapping
+	public List<EstudianteDTO> obtenerTodosLosEstudiantes() {
+		try {
+			// Obtener la lista de estudiantes desde el servicio
+			List<Estudiante> estudiantes = estudianteService.obtenerEstudiantes();
+
+			// Convertir la lista de Estudiantes a una lista de EstudianteDTO
+			List<EstudianteDTO> estudiantesDTO = estudiantes.stream()
+					.map(estudiante -> new EstudianteDTO(
+                            estudiante.getCodigo(),
+                            estudiante.getNombre(),
+                            estudiante.getCorreo()
+                    ))
+					.collect(Collectors.toList());
+
+			return estudiantesDTO; // Devolver la lista de DTOs
+		} catch (Exception e) {
+			// Manejo genérico de excepciones
+			throw new RuntimeException("Ocurrió un error al obtener los estudiantes: " + e.getMessage(), e);
+		}
+	}
 
 	@GetMapping("/{codigo}")
 	public EstudianteDTO obtenerEstudiantePorCodigo(@PathVariable String codigo) {
@@ -43,7 +59,8 @@ public class EstudianteController {
 			}
 
 			// Convertir manualmente el objeto Estudiante a EstudianteDTO
-			EstudianteDTO estudianteDTO = new EstudianteDTO(estudiante.getCodigo(), estudiante.getNombre(), estudiante.getCorreo());
+			EstudianteDTO estudianteDTO = new EstudianteDTO(estudiante.getCodigo(), estudiante.getNombre(),
+					estudiante.getCorreo());
 			// Añade más campos si los tienes en EstudianteDTO
 
 			return estudianteDTO; // Devuelve el DTO

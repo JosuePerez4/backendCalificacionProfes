@@ -41,32 +41,6 @@ public class UsuarioController {
 		}
 	}
 
-	// Obtener estudiante por código
-	@GetMapping("/estudiante/{codigo}")
-	public UsuarioDTO obtenerEstudiantePorCodigo(@PathVariable String codigo) {
-		Estudiante estudiante = usuarioServices.buscarEstudiantePorCodigo(codigo);
-		if (estudiante != null) {
-			// Convertir a UsuarioDTO y devolverlo
-			return new UsuarioDTO(estudiante.getId(), estudiante.getCorreo(), estudiante.getRol());
-		} else {
-			// Lanzamos una excepción si no encontramos el estudiante
-			throw new RuntimeException("Estudiante no encontrado con el código: " + codigo);
-		}
-	}
-
-	// Obtener administrador por usuario
-	@GetMapping("/administrador/{usuario}")
-	public UsuarioDTO obtenerAdministradorPorUsuario(@PathVariable String usuario) {
-		Administrador administrador = usuarioServices.buscarAdministradorPorUsuario(usuario);
-		if (administrador != null) {
-			// Convertir a UsuarioDTO y devolverlo
-			return new UsuarioDTO(administrador.getId(), administrador.getCorreo(), administrador.getRol());
-		} else {
-			// Lanzamos una excepción si no encontramos el administrador
-			throw new RuntimeException("Administrador no encontrado con el usuario: " + usuario);
-		}
-	}
-
 	// Validar si un correo existe
 	@GetMapping("/correo-existe/{correo}")
 	public Boolean correoExiste(@PathVariable String correo) {
