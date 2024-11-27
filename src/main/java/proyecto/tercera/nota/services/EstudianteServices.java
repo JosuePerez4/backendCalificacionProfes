@@ -2,6 +2,7 @@ package proyecto.tercera.nota.services;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,61 +16,13 @@ public class EstudianteServices {
 	@Autowired
 	private EstudianteRepository estudianteRepository;
 
-	public Estudiante registrarEstudiante(Estudiante estudiante) {
-		if (estudianteRepository.existsByCodigo(estudiante.getCodigo())) {
-			throw new IllegalArgumentException("El código de estudiante ya está registrado.");
-		}
-		estudiante.setTokenRecuperacion(null); // Garantizar que el token esté vacío
-		return estudianteRepository.save(estudiante);
-	}
-
-	public Estudiante buscarPorCodigo(String codigo) {
-		return estudianteRepository.findByCodigo(codigo);
-	}
-
-	public String generarYGuardarTokenEstudiante(String codigo) {
-		if (codigo == null || codigo.isEmpty()) {
-			throw new IllegalArgumentException("El código no puede ser nulo o vacío.");
-		}
-
-		// Buscar al estudiante por su código
-		Estudiante estudiante = estudianteRepository.findByCodigo(codigo);
-		if (estudiante == null) {
-			throw new IllegalArgumentException("No se encontró un estudiante con el código proporcionado.");
-		}
-
-		// Generar un token único
-		String token = UUID.randomUUID().toString();
-
-		try {
-			// Guardar el token en el estudiante
-			estudiante.setTokenRecuperacion(token);
-			estudianteRepository.save(estudiante);
-			return token; // Devolver el token generado
-		} catch (Exception e) {
-			throw new RuntimeException("Error al guardar el token de recuperación: " + e.getMessage(), e);
-		}
-	}
-
-	public boolean validarTokenEstudiante(String token) {
-		Estudiante estudiante = estudianteRepository.findByTokenRecuperacion(token);
-		return estudiante != null;
-	}
-
-	public boolean actualizarContrasenaPorToken(String token, String nuevaContrasena) {
-		Estudiante estudiante = estudianteRepository.findByTokenRecuperacion(token);
-		if (estudiante != null) {
-			estudiante.setContraseña(nuevaContrasena);
-			estudiante.setTokenRecuperacion(null); // Invalida el token después de usarlo
-			estudianteRepository.save(estudiante);
-			return true;
-		}
-		return false;
-	}
-
 	public List<Estudiante> obtenerEstudiantes() {
 		try {
-			List<Estudiante> estudiantes = estudianteRepository.findAll();
+			// Recuperar todos los usuarios y filtrar los estudiantes
+			List<Estudiante> estudiantes = estudianteRepository.findAll().stream()
+					.filter(usuario -> usuario instanceof Estudiante) // Filtra solo los Estudiantes
+					.map(usuario -> (Estudiante) usuario) // Castea cada Usuario a Estudiante
+					.collect(Collectors.toList());
 
 			if (estudiantes.isEmpty()) {
 				throw new RuntimeException("No se encontraron estudiantes en la base de datos.");
@@ -94,6 +47,53 @@ public class EstudianteServices {
 		} else {
 			throw new RuntimeException("Estudiante con código " + codigo + " no encontrado.");
 		}
+	}
+
+	// Generar y guardar token de recuperación
+	public String generarYGuardarTokenEstudiante(String codigo) {
+		if (codigo == null || codigo.isEmpty()) {
+			throw new IllegalArgumentException("El código no puede ser nulo o vacío.");
+		}
+
+		// Buscar al estudiante por su código
+		Estudiante estudiante = estudianteRepository.findByCodigo(codigo);
+		if (estudiante == null) {
+			throw new IllegalArgumentException("No se encontró un estudiante con el código proporcionado.");
+		}
+
+		// Generar un token único
+		String token = UUID.randomUUID().toString();
+
+		try {
+			// Guardar el token en el estudiante
+			estudiante.setTokenRecuperacion(token);
+			estudianteRepository.save(estudiante);
+			return token; // Devolver el token generado
+		} catch (Exception e) {
+			throw new RuntimeException("Error al guardar el token de recuperación: " + e.getMessage(), e);
+		}
+	}
+
+	// Validar si el token pertenece a un estudiante
+	public boolean validarTokenEstudiante(String token) {
+		Estudiante estudiante = (Estudiante) estudianteRepository.findByTokenRecuperacion(token);
+		return estudiante != null;
+	}
+
+	// Actualizar la contraseña usando un token de recuperación
+	public boolean actualizarContrasenaPorToken(String token, String nuevaContrasena) {
+		if (nuevaContrasena == null || nuevaContrasena.isEmpty()) {
+			throw new IllegalArgumentException("La nueva contraseña no puede estar vacía.");
+		}
+
+		Estudiante estudiante = (Estudiante) estudianteRepository.findByTokenRecuperacion(token);
+		if (estudiante != null) {
+			estudiante.setContraseña(nuevaContrasena);
+			estudiante.setTokenRecuperacion(null); // Invalida el token después de usarlo
+			estudianteRepository.save(estudiante);
+			return true;
+		}
+		return false;
 	}
 
 }

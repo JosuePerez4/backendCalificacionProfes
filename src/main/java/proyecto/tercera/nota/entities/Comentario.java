@@ -7,8 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -30,8 +28,4 @@ public class Comentario {
 
 	@Column(nullable = false)
 	private LocalDateTime fechaCreacion; // Fecha del comentario
-
-	@ManyToOne
-	@JoinColumn(name = "respuesta_id", nullable = false)
-	private Respuesta respuesta; // Relación con Respuesta
 }

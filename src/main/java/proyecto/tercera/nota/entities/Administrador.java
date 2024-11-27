@@ -2,28 +2,15 @@ package proyecto.tercera.nota.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "administrador")
-public class Administrador {
-
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	@Column(name = "usuario", length = 20)
+public class Administrador extends Usuario {
+	@Column(name = "usuario", length = 20, unique = true)
 	private String usuario;
-	@Column(name = "contraseña", length = 20)
-	private String contraseña;
-	@Column(name = "correo", length = 100)
-	private String correo;
-	@Column(nullable = true) // Permitir que sea opcional
-	private String tokenRecuperacion;
-
 }
