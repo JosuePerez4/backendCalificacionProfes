@@ -1,5 +1,7 @@
 package proyecto.tercera.nota.entities;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,13 +9,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import lombok.Data;
 
 @Data
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Usuario {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -29,4 +34,8 @@ public abstract class Usuario {
 
 	@Column(nullable = true)
 	private String tokenRecuperacion;
+
+	@ManyToMany
+	@JoinTable(name = "usuario_materia", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "materia_id"))
+	private List<Materia> materias;
 }

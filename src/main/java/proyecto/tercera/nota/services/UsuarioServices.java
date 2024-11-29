@@ -46,7 +46,7 @@ public class UsuarioServices {
 	}
 
 	public Optional<Usuario> buscarPorId(int id) {
-		return usuarioRepository.findById(id);
+		return Optional.of(usuarioRepository.findById(id));
 	}
 
 	// Métodos específicos para Estudiantes
