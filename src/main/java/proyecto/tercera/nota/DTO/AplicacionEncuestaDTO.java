@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AplicacionEncuestaDTO {
 
-	private String codigoMateria;
+	private String nombreMateria;
 	private String profesor;
 	private String estudiante;
 	private List<Integer> respuestas; // Calificaciones de 1 a 5

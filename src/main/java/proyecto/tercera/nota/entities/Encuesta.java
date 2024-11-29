@@ -1,5 +1,6 @@
 package proyecto.tercera.nota.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -21,5 +22,5 @@ public class Encuesta {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@OneToMany(mappedBy = "encuesta", cascade = CascadeType.ALL)
-	private List<Pregunta> preguntas;
+	private List<Pregunta> preguntas = new ArrayList<Pregunta>();
 }

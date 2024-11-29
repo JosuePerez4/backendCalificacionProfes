@@ -2,13 +2,14 @@ package proyecto.tercera.nota.entities;
 
 import java.util.List;
 
-import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
@@ -33,8 +34,8 @@ public class AplicacionEncuesta {
 	@JoinColumn(name = "encuesta_id")
 	private Encuesta encuesta;
 
-	@ElementCollection
-	private List<Integer> respuestas; // Calificaciones (1-5) para cada pregunta.
+	@OneToMany(mappedBy = "aplicacionEncuesta", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Respuesta> respuestas;
 
 	@ManyToOne
 	@JoinColumn(name = "materia_id", nullable = false)
