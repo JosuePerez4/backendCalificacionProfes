@@ -10,4 +10,5 @@ import proyecto.tercera.nota.entities.Materia;
 @Repository
 public interface MateriaRepository extends JpaRepository<Materia, Integer> {
 	List<Materia> findByUsuarioId(int usuarioId);
+	Materia findByCodigo(String codigo);
 }

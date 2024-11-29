@@ -2,6 +2,8 @@ package proyecto.tercera.nota.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -30,8 +33,10 @@ public class Materia {
 	@JoinColumn(name = "profesor_id", nullable = false)
 	private Profesor profesor;
 
-	@ManyToMany(mappedBy = "materias")
-	private List<Usuario> estudiantes; // Los estudiantes matriculados en esta materia
+	@ManyToMany
+	@JoinTable(name = "materia_estudiante", joinColumns = @JoinColumn(name = "materia_id"), inverseJoinColumns = @JoinColumn(name = "estudiante_id"))
+	@JsonIgnore
+	private List<Estudiante> estudiantes;
 
 	@OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<AplicacionEncuesta> aplicacionesEncuestas; // Encuestas aplicadas en esta materia

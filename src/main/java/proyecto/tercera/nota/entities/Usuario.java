@@ -34,8 +34,4 @@ public abstract class Usuario {
 
 	@Column(nullable = true)
 	private String tokenRecuperacion;
-
-	@ManyToMany
-	@JoinTable(name = "usuario_materia", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "materia_id"))
-	private List<Materia> materias;
 }

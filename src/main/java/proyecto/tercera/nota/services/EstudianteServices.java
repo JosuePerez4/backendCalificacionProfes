@@ -8,13 +8,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import proyecto.tercera.nota.entities.Estudiante;
+import proyecto.tercera.nota.entities.Materia;
+import proyecto.tercera.nota.entities.Usuario;
 import proyecto.tercera.nota.repositories.EstudianteRepository;
+import proyecto.tercera.nota.repositories.MateriaRepository;
+import proyecto.tercera.nota.repositories.UsuarioRepository;
 
 @Service
 public class EstudianteServices {
 
 	@Autowired
 	private EstudianteRepository estudianteRepository;
+
+	@Autowired
+	private MateriaRepository materiaRepository;
+	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 
 	public List<Estudiante> obtenerEstudiantes() {
 		try {
@@ -94,6 +104,50 @@ public class EstudianteServices {
 			return true;
 		}
 		return false;
+	}
+
+	public Estudiante agregarMateria(String codigo, String codigoMateria) {
+		// Busca al estudiante por código
+		Estudiante estudiante = estudianteRepository.findByCodigo(codigo);
+
+		// Busca la materia por código
+		Materia materia = materiaRepository.findByCodigo(codigoMateria);
+
+		// Verifica si la materia existe
+		if (materia == null) {
+			throw new RuntimeException("Materia no encontrada.");
+		}
+
+		// Agrega la materia al estudiante (asegúrate de que ya tenga la relación de
+		// ManyToMany bien configurada)
+		estudiante.getMaterias().add(materia);
+
+		// Agrega el estudiante a la lista de estudiantes de la materia
+		materia.getEstudiantes().add(estudiante); // Esto es clave para mantener la relación bidireccional
+
+		// Guarda el estudiante con la materia añadida
+		estudianteRepository.save(estudiante);
+
+		// Guarda la materia si es necesario
+		materiaRepository.save(materia);
+
+		return estudiante;
+	}
+
+	public Estudiante obtenerEstudiantePorCorreo(String correo) {
+		if (correo == null || correo.trim().isEmpty()) {
+			throw new IllegalArgumentException("El correo no puede ser nulo o vacío.");
+		}
+
+		// Buscar al usuario por correo, ya que Estudiante extiende de Usuario
+		Usuario usuario = usuarioRepository.findByCorreo(correo);
+
+		// Verificar si el usuario es una instancia de Estudiante
+		if (usuario instanceof Estudiante) {
+			return (Estudiante) usuario;
+		} else {
+			throw new RuntimeException("No se encontró un estudiante con el correo proporcionado.");
+		}
 	}
 
 }

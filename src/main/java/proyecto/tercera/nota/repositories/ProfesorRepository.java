@@ -8,5 +8,8 @@ import proyecto.tercera.nota.entities.Profesor;
 @Repository
 public interface ProfesorRepository extends JpaRepository<Profesor, Integer> {
 	Profesor findById(int id);
-}
 
+	Profesor findByNombre(String nombre);
+
+	Profesor findByCorreo(String correo); // Método para buscar por correo
+}
