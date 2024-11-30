@@ -38,13 +38,25 @@ public class ProfesorService {
 	}
 
 	public List<Materia> obtenerMateriasDelProfesor(String correo) {
-	    Profesor profesor = profesorRepository.findByCorreo(correo); // Busca el profesor por correo
+		Profesor profesor = profesorRepository.findByCorreo(correo); // Busca el profesor por correo
 
-	    if (profesor != null) {
-	        return profesor.getMaterias(); // Retorna las materias del profesor
-	    } else {
-	        throw new RuntimeException("Profesor con correo " + correo + " no encontrado.");
-	    }
+		if (profesor != null) {
+			return profesor.getMaterias(); // Retorna las materias del profesor
+		} else {
+			throw new RuntimeException("Profesor con correo " + correo + " no encontrado.");
+		}
+	}
+
+	public boolean existeProfesorPorCorreo(String correo) {
+		return profesorRepository.existsByCorreo(correo);
+	}
+
+	public List<Profesor> obtenerProfesores() {
+		return profesorRepository.findAll();
+	}
+
+	public Profesor obtenerProfesorPorCorreo(String correo) {
+		return profesorRepository.findByCorreo(correo);
 	}
 
 }

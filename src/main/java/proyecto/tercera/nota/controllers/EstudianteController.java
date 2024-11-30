@@ -71,12 +71,12 @@ public class EstudianteController {
 		}
 	}
 
-	@PostMapping("/{codigoEstudiante}/materias/{materiaId}")
-	public ResponseEntity<Estudiante> agregarMateria(@PathVariable String codigoEstudiante,
-			@PathVariable String materiaId) {
-		Estudiante estudianteActualizado = estudianteService.agregarMateria(codigoEstudiante, materiaId);
-		return ResponseEntity.ok(estudianteActualizado);
-	}
+		@PostMapping("/{codigoEstudiante}/materias/{materiaId}")
+		public ResponseEntity<Estudiante> agregarMateria(@PathVariable String codigoEstudiante,
+				@PathVariable String materiaId) {
+			Estudiante estudianteActualizado = estudianteService.agregarMateria(codigoEstudiante, materiaId);
+			return ResponseEntity.ok(estudianteActualizado);
+		}
 
 	// Endpoint para obtener todas las materias de un estudiante
 	@GetMapping("/materias/{codigo}")

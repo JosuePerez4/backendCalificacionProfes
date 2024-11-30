@@ -12,4 +12,6 @@ public interface ProfesorRepository extends JpaRepository<Profesor, Integer> {
 	Profesor findByNombre(String nombre);
 
 	Profesor findByCorreo(String correo); // Método para buscar por correo
+
+	boolean existsByCorreo(String correo);
 }

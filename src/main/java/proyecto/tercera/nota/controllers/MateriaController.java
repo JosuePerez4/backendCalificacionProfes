@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import proyecto.tercera.nota.DTO.MateriaDTO;
@@ -26,24 +27,41 @@ public class MateriaController {
 	@Autowired
 	private MateriaService materiaService;
 
-	@GetMapping
+	@GetMapping("/materias")
 	public ResponseEntity<List<Materia>> obtenerMaterias() {
 		return ResponseEntity.ok(materiaService.obtenerTodasLasMaterias());
 	}
 
 	@PostMapping("/crear-materia")
 	public ResponseEntity<?> crearMateria(@RequestBody MateriaDTO materiaDTO) {
-		// Llamar al servicio para crear la materia, pasando el MateriaDTO
-		MateriaDTO materiaGuardadaDTO = materiaService.crearMateria(materiaDTO);
+		try {
+			// Log para depurar los datos recibidos
+			System.out.println("Datos recibidos: " + materiaDTO);
 
-		// Retornar la respuesta con el DTO de la materia guardada
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body("Materia creada con éxito: " + materiaGuardadaDTO.getNombre());
+			// Llamar al servicio para crear la materia
+			MateriaDTO materiaGuardadaDTO = materiaService.crearMateria(materiaDTO);
+
+			// Retornar la respuesta con el DTO de la materia guardada
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body("Materia creada con éxito: " + materiaGuardadaDTO.getNombre());
+		} catch (Exception e) {
+			// Log de error
+			e.printStackTrace();
+
+			// Retornar un error específico al cliente
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al crear la materia: " + e.getMessage());
+		}
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Materia> obtenerMateriaPorId(@PathVariable int id) {
 		return ResponseEntity.ok(materiaService.obtenerMateriaPorId(id));
+	}
+
+	@GetMapping("/buscar")
+	public ResponseEntity<Materia> obtenerMateriaPorNombre(@RequestParam String nombre) {
+		return ResponseEntity.ok(materiaService.obtenerMateriaPorNombre(nombre));
 	}
 
 	@DeleteMapping("/{id}")

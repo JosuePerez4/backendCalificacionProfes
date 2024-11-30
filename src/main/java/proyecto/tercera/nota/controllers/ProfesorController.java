@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import proyecto.tercera.nota.DTO.ProfesorDTO;
 import proyecto.tercera.nota.entities.Materia;
+import proyecto.tercera.nota.entities.Profesor;
 import proyecto.tercera.nota.services.ProfesorService;
 
 @RestController
@@ -35,9 +37,32 @@ public class ProfesorController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(profesorGuardado);
 	}
 
+	@GetMapping("/existe")
+	public ResponseEntity<Boolean> verificarProfesorPorCorreo(@RequestParam String correo) {
+		boolean existe = profesorService.existeProfesorPorCorreo(correo);
+		return ResponseEntity.ok(existe);
+	}
+
 	@GetMapping("/profesor/{correo}/materias")
 	public ResponseEntity<List<Materia>> obtenerMateriasDelProfesor(@PathVariable String correo) {
 		List<Materia> materias = profesorService.obtenerMateriasDelProfesor(correo);
 		return ResponseEntity.ok(materias); // Devuelve las materias del profesor
+	}
+
+	@GetMapping("/profesores")
+	public ResponseEntity<List<Profesor>> obtenerProfesores() {
+		List<Profesor> profesores = profesorService.obtenerProfesores();
+		return ResponseEntity.ok(profesores); // Devuelve las materias del profesor
+	}
+
+	@GetMapping("/por-correo")
+	public ResponseEntity<Profesor> obtenerProfesorPorCorreo(@RequestParam String correo) {
+		Profesor profesor = profesorService.obtenerProfesorPorCorreo(correo);
+
+		if (profesor != null) {
+			return ResponseEntity.ok(profesor);
+		} else {
+			return ResponseEntity.notFound().build(); // Retorna 404 si no se encuentra el profesor
+		}
 	}
 }

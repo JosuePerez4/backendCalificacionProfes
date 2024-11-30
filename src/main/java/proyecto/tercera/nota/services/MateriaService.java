@@ -46,6 +46,10 @@ public class MateriaService {
 		return materiaRepository.findById(id).orElseThrow(() -> new RuntimeException("Materia no encontrada"));
 	}
 
+	public Materia obtenerMateriaPorNombre(String nombre) {
+		return materiaRepository.findByNombre(nombre);
+	}
+
 	public void eliminarMateria(int id) {
 		Materia materia = obtenerMateriaPorId(id);
 		materiaRepository.delete(materia);
